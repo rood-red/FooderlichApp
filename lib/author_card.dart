@@ -2,18 +2,25 @@ import 'package:flutter/material.dart';
 import 'fooderlich_theme.dart';
 import 'circle_image.dart';
 
-class AuthorCard extends StatelessWidget {
-  // 1
+class AuthorCard extends StatefulWidget {
   final String authorName;
   final String title;
   final ImageProvider? imageProvider;
+
   const AuthorCard({
-    super.key,
+    Key? key,
     required this.authorName,
     required this.title,
     this.imageProvider,
-  });
-  // 2
+  }) : super(key: key);
+
+  @override
+  _AuthorCardState createState() => _AuthorCardState();
+}
+
+class _AuthorCardState extends State<AuthorCard> {
+  bool isFavoritePressed = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,41 +28,41 @@ class AuthorCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // 1
           Row(
             children: [
               CircleImage(
-                imageProvider: imageProvider,
+                imageProvider: widget.imageProvider,
                 imageRadius: 28,
               ),
-              // 2
               const SizedBox(width: 8),
-              // 3
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    authorName,
+                    widget.authorName,
                     style: FooderlichTheme.lightTextTheme.headline2,
                   ),
                   Text(
-                    title,
+                    widget.title,
                     style: FooderlichTheme.lightTextTheme.headline3,
-                  )
+                  ),
                 ],
               ),
             ],
           ),
           IconButton(
-              // 4
-              icon: const Icon(Icons.favorite_border),
-              iconSize: 30,
-              color: Colors.grey[400],
-              // 5
-              onPressed: () {
-                const snackBar = SnackBar(content: Text('Favorite Pressed'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }),
+            icon: Icon(isFavoritePressed ? Icons.favorite :
+             Icons.favorite_border),
+            iconSize: 30,
+            color: Colors.red[400],
+            onPressed: () {
+              setState(() {
+                isFavoritePressed = !isFavoritePressed;
+              });
+              final snackBar = SnackBar(content: Text('Favorite Pressed'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            },
+          ),
         ],
       ),
     );
